@@ -39,24 +39,39 @@
       </div>
     </div>
     <div id="snackbar">Some text some message..</div>
-    <div id="collapse-container" class="collapse">
+    <div id="main-collapse-container" class="collapse">
       <h3>Hello Mum!</h3>
       <div class="row">
         <div class="col-sm-3">
-          <button class="btn btn-success">View All Clients</button>
+          <button id="clients-button" class="btn btn-success">View Client Info</button>
         </div>
         <div class="col-sm-3">
-          <button class="btn btn-primary">View Clients Logs</button>
+          <button id="client-log-button" class="btn btn-primary">View Clients Logs</button>
         </div>
         <div class="col-sm-3">
-          <button class="btn btn-info">Send New Workout</button>
+          <button id="workout-button" class="btn btn-info">Send New Workout</button>
         </div>
         <div class="col-sm-3">
-          <button class="btn btn-warning">Send Push Notification</button>
+          <button id="push-button" class="btn btn-warning">Send Push Notification</button>
         </div>
       </div>
     </div>
-
+    <div id="secondary-collapse-container" class="collapse">
+    <div id=client-container>
+      <div class="row">
+        <div id="left-col1" class="col-md-6"></div>
+        <div id="right-col1" class="col-md-6"></div>
+      </div>
+    </div>
+    </div>
+    <div id="tertiary-collapse-container" class="collapse">
+    <div id=info-container>
+      <div class="row">
+        <div id="left-col2" class="col-md-4"></div>
+        <div id="right-col2" class="col-md-8"></div>
+      </div>
+    </div>
+    </div>
     <script src="js/script.js"></script> <!-- This script must be first -->
   </body>
   </html>

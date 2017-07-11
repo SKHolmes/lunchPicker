@@ -17,6 +17,10 @@
 	const passTxt = document.getElementById("password-textbox");
 	const loginBtn = document.getElementById("login-btn");
 	const toast = document.getElementById("snackbar");
+	const clientButton = document.getElementById("clients-button");
+	const logButton = document.getElementById("client-log-button");
+	const workoutButton = document.getElementById("workout-button");
+	const pushButton = document.getElementById("push-button");
 
 
 	//Add login event
@@ -43,20 +47,135 @@
 			emailTxt.value = "";
 			passTxt.value = "";
 			popup("Logged in");
-			$(".collapse").collapse("show");
+			$("#main-collapse-container").collapse("show");
 		}else{
 			//Else we have just logged out so display notification.
-			popup("Logged out");
-			loginBtn.innerHTML = "Login"
-			$(".collapse").collapse("hide");
+			firebase.auth().signOut().then(function(){
+				loginBtn.innerHTML = "Login"
+				popup("Logged out");
+			}).catch(function(error){
+				popup(error);
+			});
+			$("#main-collapse-container").collapse("hide");
 		}
 
 	});
 
+	//Function which displays a message at the bottom of the screen
 	function popup(message){
 		toast.innerHTML = message;
 		toast.className = "show";
 		setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 3000);
 	};
+
+	clientButton.addEventListener('click', e => {
+		//Ensure authentication
+		var user = firebase.auth().currentUser;
+		if(user != null){
+			var clientNames = [];
+			var rootQuery = firebase.database().ref("/Clients/").orderByKey();
+			rootQuery.once("value")
+			.then(function(snapshot){
+				snapshot.forEach(function(childSnapshot){
+					clientNames.push(childSnapshot.key);
+				});
+				populateClientCollapse(clientNames);
+			});
+			
+		}else{
+			popup("You are not logged in and cannot access this functionality.");
+		}
+	});
+
+	function populateClientCollapse(clientNames){
+		//Ensure authentication
+		var user = firebase.auth().currentUser;
+		if(user != null){
+			var left = document.getElementById("left-col1");
+			var right = document.getElementById("right-col1");
+			for (var i = 0; i < clientNames.length; i+=2) {
+				var newBtn = document.createElement("button");
+				newBtn.className = "btn btn-success";
+				newBtn.innerHTML = clientNames[i];
+				newBtn.addEventListener("click", displayClientInfo);
+				left.appendChild(newBtn);
+			}
+			for (var i = 1; i < clientNames.length; i+=2) {
+				var newBtn = document.createElement("button");
+				newBtn.className = "btn btn-primary";
+				newBtn.innerHTML = clientNames[i];
+				newBtn.addEventListener("click", displayClientInfo);
+				right.appendChild(newBtn);
+			}
+			$("#secondary-collapse-container").collapse("show");
+		}else{
+			popup("You are not logged in and cannot access this functionality.");
+		}
+	}
+
+	function displayClientInfo(e){
+		//Ensure authentication
+		var user = firebase.auth().currentUser;
+		if(user != null){
+			var left = document.getElementById("left-col2");
+			var right = document.getElementById("right-col2");
+			var Query = firebase.database().ref("/Clients/" + e.target.innerHTML).orderByKey();
+			Query.once("value")
+			.then(function(snapshot){
+				snapshot.forEach(function(childSnapshot){
+					switch(childSnapshot.key) {
+
+						case "email":
+						var email = document.createElement("p");
+						email.innerHTML = "Email:";
+						email.className = "infoType";
+						var emailValue = document.createElement("p");
+						emailValue.innerHTML = childSnapshot.val();						
+						left.appendChild(email);
+						right.appendChild(emailValue);
+						break;
+
+						case "full-name":
+						var fullName = document.createElement("p");
+						fullName.innerHTML = "Full Name:";
+						fullName.className = "infoType";
+						var fullNameValue = document.createElement("p");
+						fullNameValue.innerHTML = childSnapshot.val();
+						left.appendChild(fullName);
+						right.appendChild(fullNameValue);
+						break;
+
+						case "number":
+						var number = document.createElement("p");
+						number.innerHTML = "Contact Number:";
+						number.className = "infoType";
+						var numberValue = document.createElement("p");
+						numberValue.innerHTML = childSnapshot.val();
+						left.appendChild(number);
+						right.appendChild(numberValue);
+						break;
+
+						case "weight":
+						var weight = document.createElement("p");
+						weight.innerHTML = "Weight:";
+						weight.className = "infoType";
+						var weightValue = document.createElement("p");
+						weightValue.innerHTML = childSnapshot.val() + "Kgs";
+						left.appendChild(weight);
+						right.appendChild(weightValue);
+						break;
+
+						default:
+						console.log("New data type unaccounted for in switch statement: '" + childSnapshot.key + "'.");
+					}
+				});
+				//TODO add client log button here.
+				$("#tertiary-collapse-container").collapse("show");	
+			});
+
+		}else{
+			popup("You are not logged in and cannot access this functionality.");
+		}
+	}
 
 }());

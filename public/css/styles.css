@@ -117,4 +117,14 @@ span.psw {
     border-radius: 5px; 
     padding: 16px;
     margin-top: 24px;
+    background-color: #ededed;
+}
+
+#left-col{
+    /*border-right: : solid 3px #777777;*/
+}
+
+.infoType{
+    font-weight: bold;
+    font-size: 18px;
 }
