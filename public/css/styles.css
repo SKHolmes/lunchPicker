@@ -104,12 +104,12 @@ span.psw {
 /* Change styles for span and cancel button on extra small screens */
 @media screen and (max-width: 300px) {
     span.psw {
-       display: block;
-       float: none;
-    }
-    .cancelbtn {
-       width: 100%;
-    }
+     display: block;
+     float: none;
+ }
+ .cancelbtn {
+     width: 100%;
+ }
 }
 
 .collapse {
@@ -124,7 +124,11 @@ span.psw {
     /*border-right: : solid 3px #777777;*/
 }
 
-.infoType{
+.info{
     font-weight: bold;
     font-size: 18px;
+}
+
+.food-log{
+    /*margin: 16px !important;*/
 }

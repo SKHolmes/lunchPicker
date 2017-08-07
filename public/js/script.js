@@ -22,6 +22,12 @@
 	const workoutButton = document.getElementById("workout-button");
 	const pushButton = document.getElementById("push-button");
 
+	//Create enums for active collapse
+	collapseEnum = {
+		NONE: 'none',
+		
+	}
+
 
 	//Add login event
 	loginBtn.addEventListener('click', e => {
@@ -119,18 +125,31 @@
 		if(user != null){
 			var left = document.getElementById("left-col2");
 			var right = document.getElementById("right-col2");
+			var row = document.getElementById("tertiary-collapse-container");
 			var Query = firebase.database().ref("/Clients/" + e.target.innerHTML).orderByKey();
 			Query.once("value")
 			.then(function(snapshot){
+				//Here we are cleading the colllapse of data to make way for a new set of information.
+				while(left.firstChild){
+					left.removeChild(left.firstChild);
+				}
+				while(right.firstChild){
+					right.removeChild(right.firstChild);
+				}
+				var toRemove = document.getElementById("food-log-button")
+				if(toRemove){
+					row.removeChild(toRemove);
+				}
 				snapshot.forEach(function(childSnapshot){
 					switch(childSnapshot.key) {
 
 						case "email":
 						var email = document.createElement("p");
 						email.innerHTML = "Email:";
-						email.className = "infoType";
+						email.className = "info";
 						var emailValue = document.createElement("p");
-						emailValue.innerHTML = childSnapshot.val();						
+						emailValue.innerHTML = childSnapshot.val();	
+						emailValue.className = "info";					
 						left.appendChild(email);
 						right.appendChild(emailValue);
 						break;
@@ -138,8 +157,9 @@
 						case "full-name":
 						var fullName = document.createElement("p");
 						fullName.innerHTML = "Full Name:";
-						fullName.className = "infoType";
+						fullName.className = "info";
 						var fullNameValue = document.createElement("p");
+						fullNameValue.className = "info";
 						fullNameValue.innerHTML = childSnapshot.val();
 						left.appendChild(fullName);
 						right.appendChild(fullNameValue);
@@ -148,8 +168,9 @@
 						case "number":
 						var number = document.createElement("p");
 						number.innerHTML = "Contact Number:";
-						number.className = "infoType";
+						number.className = "info";
 						var numberValue = document.createElement("p");
+						numberValue.className = "info";
 						numberValue.innerHTML = childSnapshot.val();
 						left.appendChild(number);
 						right.appendChild(numberValue);
@@ -158,8 +179,9 @@
 						case "weight":
 						var weight = document.createElement("p");
 						weight.innerHTML = "Weight:";
-						weight.className = "infoType";
+						weight.className = "info";
 						var weightValue = document.createElement("p");
+						weightValue.className = "info";
 						weightValue.innerHTML = childSnapshot.val() + "Kgs";
 						left.appendChild(weight);
 						right.appendChild(weightValue);
@@ -168,8 +190,15 @@
 						default:
 						console.log("New data type unaccounted for in switch statement: '" + childSnapshot.key + "'.");
 					}
+					
 				});
 				//TODO add client log button here.
+				var btn = document.createElement("button");
+				btn.setAttribute("id", "food-log-button");
+				btn.className = "btn btn-info food-log";
+				btn.innerHTML = "View Food Log";
+				//row.appendChild(btn);
+				document.getElementById("tertiary-collapse-container").appendChild(btn);
 				$("#tertiary-collapse-container").collapse("show");	
 			});
 
