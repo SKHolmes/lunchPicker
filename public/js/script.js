@@ -22,12 +22,15 @@
 	const workoutButton = document.getElementById("workout-button");
 	const pushButton = document.getElementById("push-button");
 
-	//Create enums for active collapse
-	collapseEnum = {
-		NONE: 'none',
-		
-	}
-
+	//Master View Enum
+	var MasterViews = {
+		NONE: 0,
+		CLIENT_INFO: 1,
+		CLIENT_LOGS: 2,
+		NEW_WORKOUT: 3,
+		PUSH_NOTIFICATION: 4
+	};
+	var currentMView = MasterViews.NONE;
 
 	//Add login event
 	loginBtn.addEventListener('click', e => {
@@ -78,18 +81,58 @@
 		//Ensure authentication
 		var user = firebase.auth().currentUser;
 		if(user != null){
-			var clientNames = [];
-			var rootQuery = firebase.database().ref("/Clients/").orderByKey();
-			rootQuery.once("value")
-			.then(function(snapshot){
-				snapshot.forEach(function(childSnapshot){
-					clientNames.push(childSnapshot.key);
+			if(currentMView != MasterViews.CLIENT_INFO){
+				clearCollapse();
+				currentMView = MasterViews.CLIENT_INFO;
+				var clientNames = [];
+				var rootQuery = firebase.database().ref("/Clients/").orderByKey();
+				rootQuery.once("value")
+				.then(function(snapshot){
+					snapshot.forEach(function(childSnapshot){
+						clientNames.push(childSnapshot.key);
+					});
+					populateClientCollapse(clientNames);
 				});
-				populateClientCollapse(clientNames);
-			});
+			}
 			
 		}else{
 			popup("You are not logged in and cannot access this functionality.");
+		}
+	});
+
+	logButton.addEventListener('click', e => {
+		//Ensure authentication
+		var user = firebase.auth().currentUser;
+		if(user != null){
+			if(currentMView != MasterViews.CLIENT_LOGS){
+				clearCollapse();
+				currentMView = MasterViews.CLIENT_LOGS;
+				//TODO: Set up nodes to view client logs(i.e. Buttons)
+			}
+		}
+	});
+
+	workoutButton.addEventListener('click', e => {
+		//Ensure authentication
+		var user = firebase.auth().currentUser;
+		if(user != null){
+			if(currentMView != MasterViews.NEW_WORKOUT){
+				clearCollapse();
+				currentMView = MasterViews.NEW_WORKOUT;
+				//TODO: Set up fields to push new Workout to devices.
+			}
+		}
+	});
+
+	pushButton.addEventListener('click', e => {
+		//Ensure authentication
+		var user = firebase.auth().currentUser;
+		if(user != null){
+			if(currentMView != MasterViews.PUSH_NOTIFICATION){
+				clearCollapse();
+				currentMView = MasterViews.PUSH_NOTIFICATION;
+				//TODO: Set up fields to push a simple message to devices.
+			}
 		}
 	});
 
@@ -129,17 +172,7 @@
 			var Query = firebase.database().ref("/Clients/" + e.target.innerHTML).orderByKey();
 			Query.once("value")
 			.then(function(snapshot){
-				//Here we are cleading the colllapse of data to make way for a new set of information.
-				while(left.firstChild){
-					left.removeChild(left.firstChild);
-				}
-				while(right.firstChild){
-					right.removeChild(right.firstChild);
-				}
-				var toRemove = document.getElementById("food-log-button")
-				if(toRemove){
-					row.removeChild(toRemove);
-				}
+				clearCollapse();
 				snapshot.forEach(function(childSnapshot){
 					switch(childSnapshot.key) {
 
@@ -205,6 +238,26 @@
 		}else{
 			popup("You are not logged in and cannot access this functionality.");
 		}
+	}
+
+
+
+	function clearCollapse(){
+
+		var left = document.getElementById("left-col2");
+		var right = document.getElementById("right-col2");
+		var row = document.getElementById("tertiary-collapse-container");
+		while(left.firstChild){
+			left.removeChild(left.firstChild);
+		}
+		while(right.firstChild){
+			right.removeChild(right.firstChild);
+		}
+		var toRemove = document.getElementById("food-log-button")
+		if(toRemove){
+			row.removeChild(toRemove);
+		}
+
 	}
 
 }());
