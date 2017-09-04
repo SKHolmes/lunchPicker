@@ -21,6 +21,7 @@
 	const logButton = document.getElementById("client-log-button");
 	const workoutButton = document.getElementById("workout-button");
 	const pushButton = document.getElementById("push-button");
+	const lunchBtn = document.getElementById("lunchBtn");
 
 	//Master View Enum
 	var MasterViews = {
@@ -31,6 +32,21 @@
 		PUSH_NOTIFICATION: 4
 	};
 	var currentMView = MasterViews.NONE;
+
+	//Lunch Enums
+	var lunch = {
+
+
+	};
+
+	function getRandomInt(min, max) {
+		return Math.floor(Math.random() * (max - min + 1)) + min;
+	}
+
+	lunchBtn.addEventListener('click', function(){
+		var int = getRandomInt(0, 7);
+		console.log('click');
+	});
 
 	//Add login event
 	loginBtn.addEventListener('click', e => {

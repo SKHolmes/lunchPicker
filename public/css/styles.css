@@ -112,6 +112,10 @@ span.psw {
  }
 }
 
+h2{
+   text-align: center;
+}
+
 .collapse {
     border: 3px solid #777777;
     border-radius: 5px; 
