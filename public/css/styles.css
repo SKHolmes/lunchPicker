@@ -136,3 +136,10 @@ h2{
 .food-log{
     /*margin: 16px !important;*/
 }
+
+h1{
+    text-align: center;
+    font-size: 64px;
+    /*border-bottom: 8px solid #FFFFFF;*/
+    text-decoration: underline;
+}

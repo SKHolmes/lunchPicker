@@ -33,19 +33,29 @@
 	};
 	var currentMView = MasterViews.NONE;
 
-	//Lunch Enums
-	var lunch = {
-
-
-	};
-
 	function getRandomInt(min, max) {
 		return Math.floor(Math.random() * (max - min + 1)) + min;
 	}
 
 	lunchBtn.addEventListener('click', function(){
-		var int = getRandomInt(0, 7);
-		console.log('click');
+		var rawFile = new XMLHttpRequest();
+    	rawFile.open("GET", "lunch.txt", false);
+    	rawFile.onreadystatechange = function ()
+    	{
+    	    if(rawFile.readyState === 4)
+    	    {
+    	        if(rawFile.status === 200 || rawFile.status == 0)
+    	        {
+    	            var allText = rawFile.responseText;
+    	            var searchable = allText.split('\n');
+    	            var int = getRandomInt(0, searchable.length-1);
+    	            //console.log(searchable[int]);
+    	            document.getElementById("choice").innerHTML = searchable[int];
+    	        }
+        }
+    }
+    rawFile.send(null);
+
 	});
 
 	//Add login event
